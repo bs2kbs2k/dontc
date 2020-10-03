@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>SM64ID</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha512.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" />
+    <style>
+#romfile{
+  display:none;
+}
+.card{
+  margin: 10px;
+}
+.card-body{
+  color: white!important;
+  text-align: center;
+}
+    </style>
+    <script type='text/javascript'>
+document.getElementById("romfile").addEventListener("change", function (e) {
+  getMD5(document.getElementById("romfile").files[0], (prog) => {
+    bar = document.getElementById("progress");
+    bar.textContent = Math.round(prog * 100) + "%";
+    bar.style.width = Math.round(prog * 100) + "%";
+  }).then(
+    (res) => goHashYourself(res),
+    (err) => console.error(err)
+  );
+});
+
+function ida(hash){
+  const map=[["4ec89bd5cfe2aec976b6db48e9abba9046eaccdd89b1f40893be1a0f6740decf24d95bc06313966a044034233c2d1774c00ef7539d3734297b378dfd34645e47","Europe","Little Endian(n64)"],
+["023daf8ae8aff8b23f37bf686e1ad96f0db2da7069c00a2fbf0f82009f85b46182b5134e09a608fa1e0e8bb972ca651cfbec870f10a26d551626765cc90b2dc6","Europe","Byteswapped(v64)"],
+["9627ed0bd2339b5c2270ff103b33842fdc86641982224b8e2c3f6996ece2fd47f3316ec65935af97ce74850930958a9350dfcb5a144d0bd3dc2aae3f39d7b0cb","Europe","Big Endian(z64)"],
+["637d4c47b6f56aefebadd70bb7725419fbc56b481bf06db21f36878deb4b9f79485b347034c81973120998ebe5eb89a968676835bc07d6b1025284d14b492da0","Japan","Little Endian(n64)"],
+["002149ef37ea938d4c813abb904dbd9193b1e68c93c7f4f171fd3dd88c689992664b054154946f032de6cd086577ce593103ea5b2de22450bbf1d7c464470cab","Japan","Byteswapped(v64)"],
+["12acfecb0c774c7e06f87c2da1f4fa1215183cfbf173cb92068acaa73671b7ba78a66d0b019d27fa3efce11543da73b09bc52e98ad70769fd26ed46987aa4348","Japan","Big Endian(z64)"],
+["b3fdc449dc0b18bd2beacbc32f5ee84c9c371c624cc369d927d70e9194c4f3af7b0754c6f99b4404b0ceb7e395057824cbd075b36fc8e63d2495f79df3e37f00","Shindou","Little Endian(n64)"],
+["3d88a87d384ae6e1610e782c82deda8e67cda4b4433908f0f4ce65ecf141570706f34f9c307234b7528387e7f70031815c075017979a99c37ed160f12b9f55dc","Shindou","Byteswapped(v64)"],
+["13e32e5282e202e899fd57f0e7152917ae546e5080be1538261b1819304d557927d0cd541c39f89a4892cd15f1c1e75a91473e0b2224f9567fac2e9b59b03c4a","Shindou","Big Endian(z64)"],
+["eb05e897c7e1a431e5de26c61bd8bb76c58191a7077e67bf1dd5c4f8da58abc9a1c86125ca3ffd698438feebc58fd53558b3e18a19801640ed36ee90c741583b","America","Little Endian(n64)"],
+["c85c207181238bf98b14db54e97a3c09df7e4e1841dc1f9050edcc6525e99e5ffa6fccddfd5911e7ea87ff0625cf9e61cb375a7638bc39820e4e4b55ff45b369","America","Byteswapped(v64)"],
+["b108cb20e0181b7ea029b19c6070b8108c96417da88c3d2e7e52cf9f1ed2171218ef1417c3b3c70facbb28a1b1a07cc36c4076cf9e845d543085a81993d51adb","America","Big Endian(z64)"]]
+  return map.filter(a=>a[0]==hash)[0]
+}
+
+function goHashYourself(hash){
+  let a=document.getElementsByTagName("ul")[0].children
+  let id = ida(hash + '')
+  a[0].textContent = "Hash: "+id[0].slice(0,15)+"...";
+  a[1].textContent = "Version: "+id[1];
+  a[2].textContent = "ROM type: "+id[2];
+}
+
+function readChunked(file, chunkCallback, endCallback) {
+  var fileSize = file.size;
+  var chunkSize = 4 * 1024 * 1024; // 4MB
+  var offset = 0;
+
+  var reader = new FileReader();
+  reader.onload = function () {
+    if (reader.error) {
+      endCallback(reader.error || {});
+      return;
+    }
+    offset += reader.result.length;
+    // callback for handling read chunk
+    // TODO: handle errors
+    chunkCallback(reader.result, offset, fileSize);
+    if (offset >= fileSize) {
+      endCallback(null);
+      return;
+    }
+    readNext();
+  };
+
+  reader.onerror = function (err) {
+    endCallback(err || {});
+  };
+
+  function readNext() {
+    var fileSlice = file.slice(offset, offset + chunkSize);
+    reader.readAsBinaryString(fileSlice);
+  }
+  readNext();
+}
+
+function getMD5(blob, cbProgress) {
+  return new Promise((resolve, reject) => {
+    var md5 = CryptoJS.algo.SHA512.create();
+    readChunked(
+      blob,
+      (chunk, offs, total) => {
+        md5.update(CryptoJS.enc.Latin1.parse(chunk));
+        if (cbProgress) {
+          cbProgress(offs / total);
+        }
+      },
+      (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          // TODO: Handle errors
+          var hash = md5.finalize();
+          var hashHex = hash.toString(CryptoJS.enc.Hex);
+          resolve(hashHex);
+        }
+      }
+    );
+  });
+}
+
+var dropZone = document.getElementById("dropZone");
+
+// Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
+dropZone.addEventListener("dragover", function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "copy";
+});
+
+dropZone.addEventListener("click", function (e) {
+  document.getElementById("romfile").click();
+});
+
+// Get file data on drop
+dropZone.addEventListener("drop", function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+  var files = e.dataTransfer.files; // Array of all files
+  getMD5(files[0], (prog) => {
+    bar = document.getElementById("progress");
+    bar.textContent = Math.round(prog * 100) + "%";
+    bar.style.width = Math.round(prog * 100) + "%";
+  }).then(
+    (res) => goHashYourself(res),
+    (err) => console.error(err)
+  );
+});
+    </script>
+  </head>
+  <body>
+<input id="romfile" type="file">
+<div class="card" style="width: 288px;">
+  <div class="card-body bg-primary" id="dropZone">
+    <br>
+    Drop file here...<br>
+    <small>or click to upload</small>
+    <br>
+    <br>
+</div>
+<div class="progress" style="border-radius:0;">
+  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1" id="progress"></div>
+  </div>
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">Hash:</li>
+    <li class="list-group-item">Version:</li>
+    <li class="list-group-item">ROM type:</li>
+  </ul>
+</div>
+  </body>
+</html>
