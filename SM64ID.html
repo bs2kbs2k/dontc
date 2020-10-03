@@ -17,6 +17,26 @@
   text-align: center;
 }
     </style>
+  </head>
+  <body>
+<input id="romfile" type="file">
+<div class="card" style="width: 288px;">
+  <div class="card-body bg-primary" id="dropZone">
+    <br>
+    Drop file here...<br>
+    <small>or click to upload</small>
+    <br>
+    <br>
+</div>
+<div class="progress" style="border-radius:0;">
+  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1" id="progress"></div>
+  </div>
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">Hash:</li>
+    <li class="list-group-item">Version:</li>
+    <li class="list-group-item">ROM type:</li>
+  </ul>
+</div>
     <script type='text/javascript'>
 document.getElementById("romfile").addEventListener("change", function (e) {
   getMD5(document.getElementById("romfile").files[0], (prog) => {
@@ -139,25 +159,5 @@ dropZone.addEventListener("drop", function (e) {
   );
 });
     </script>
-  </head>
-  <body>
-<input id="romfile" type="file">
-<div class="card" style="width: 288px;">
-  <div class="card-body bg-primary" id="dropZone">
-    <br>
-    Drop file here...<br>
-    <small>or click to upload</small>
-    <br>
-    <br>
-</div>
-<div class="progress" style="border-radius:0;">
-  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1" id="progress"></div>
-  </div>
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">Hash:</li>
-    <li class="list-group-item">Version:</li>
-    <li class="list-group-item">ROM type:</li>
-  </ul>
-</div>
   </body>
 </html>
