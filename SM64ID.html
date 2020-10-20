@@ -139,7 +139,7 @@
     a[0].textContent = "Hash: " + (hash+'').slice(0, 15) + "...";
     whatisthetype();
     setTimeout(function(){
-        a[2].textContent = "ROM type: " + whatisthetype();
+        a[2].textContent = "ROM type: " + window.type;
     },100);
     let id = ida(hash + "");
     a[0].textContent = "Hash: " + id[0].slice(0, 15) + "...";
