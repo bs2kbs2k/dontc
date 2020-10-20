@@ -138,9 +138,6 @@
     let a = document.getElementsByTagName("ul")[0].children;
     a[0].textContent = "Hash: " + (hash+'').slice(0, 15) + "...";
     whatisthetype();
-    setTimeout(function(){
-        a[2].textContent = "ROM type: " + window.type;
-    },100);
     let id = ida(hash + "");
     a[0].textContent = "Hash: " + id[0].slice(0, 15) + "...";
     a[1].textContent = "Version: " + id[1];
@@ -166,7 +163,8 @@
                     alert("Error: Format identification failed");
                     return;
             }
-            window.type = q
+            document.getElementsByTagName("ul")[0].children[2].textContent = "ROM type: " + q;
+            return;
         };
         inputFileName = window.romfile.name;
         reader.onloadend = a;
