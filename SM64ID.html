@@ -149,7 +149,7 @@
         a = function () {
             var romdv = new DataView(reader.result);
             q = "If you see this, panic"
-            switch (romdv.getUint32(0x00000000);) {
+            switch (romdv.getUint32(0x00000000)) {
                 case 0x37804012:
                     q = "Byteswapped(v64)";
                     break;
