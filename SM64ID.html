@@ -137,6 +137,7 @@
     function goHashYourself(hash) {
     let a = document.getElementsByTagName("ul")[0].children;
     a[0].textContent = "Hash: " + (hash+'').slice(0, 15) + "...";
+    a[1].textContent = "Version: Unknown";
     whatisthetype();
     let id = ida(hash + "");
     a[0].textContent = "Hash: " + id[0].slice(0, 15) + "...";
