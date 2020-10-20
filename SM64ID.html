@@ -137,10 +137,37 @@
     function goHashYourself(hash) {
     let a = document.getElementsByTagName("ul")[0].children;
     a[0].textContent = "Hash: " + (hash+'').slice(0, 15) + "...";
+    a[2].textContent = "ROM type: " + whatisthetype();
     let id = ida(hash + "");
     a[0].textContent = "Hash: " + id[0].slice(0, 15) + "...";
     a[1].textContent = "Version: " + id[1];
     a[2].textContent = "ROM type: " + id[2];
+    }
+    
+    function whatisthetype(){
+        var reader = new FileReader();
+        a = function () {
+            var romdv = new DataView(reader.result);
+            q = "If you see this, panic"
+            switch (romdv.getUint32(0x00000000);) {
+                case 0x37804012:
+                    q = "Byteswapped(v64)";
+                    break;
+                case 0x40123780:
+                    q = "Little Endian(n64)";
+                    break;
+                case 0x80371240:
+                    q = "Big Endian(z64)";
+                    break;
+                default:
+                    alert("Error: Format identification failed");
+                    return;
+            }
+            return q;
+        };
+        inputFileName = window.romfile.name;
+        reader.onloadend = a;
+        reader.readAsArrayBuffer(window.romfile);
     }
 
     function readChunked(file, chunkCallback, endCallback) {
