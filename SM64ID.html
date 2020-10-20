@@ -137,7 +137,10 @@
     function goHashYourself(hash) {
     let a = document.getElementsByTagName("ul")[0].children;
     a[0].textContent = "Hash: " + (hash+'').slice(0, 15) + "...";
-    a[2].textContent = "ROM type: " + whatisthetype();
+    whatisthetype();
+    setTimeout(function(){
+        a[2].textContent = "ROM type: " + whatisthetype();
+    },100);
     let id = ida(hash + "");
     a[0].textContent = "Hash: " + id[0].slice(0, 15) + "...";
     a[1].textContent = "Version: " + id[1];
@@ -146,9 +149,9 @@
     
     function whatisthetype(){
         var reader = new FileReader();
-        q = "If you see this, panic"
         a = function () {
             var romdv = new DataView(reader.result);
+            q = "If you see this, panic"
             switch (romdv.getUint32(0x00000000)) {
                 case 0x37804012:
                     q = "Byteswapped(v64)";
@@ -163,11 +166,11 @@
                     alert("Error: Format identification failed");
                     return;
             }
+            window.type = q
         };
         inputFileName = window.romfile.name;
         reader.onloadend = a;
         reader.readAsArrayBuffer(window.romfile);
-        return q;
     }
 
     function readChunked(file, chunkCallback, endCallback) {
