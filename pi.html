@@ -23,20 +23,14 @@
         
         function dewit() {
           hunks = Math.floor((document.getElementById("digits").value - 1) / 1000)
+          promises = []
           document.getElementById("result").innerText = "3."
           for (a = 0; a < hunks; a++)
-            $.get("https://api.pi.delivery/v1/pi", {
-              start: (1000 * a) + 1,
-              numberOfDigits: 1000
-            }, function(data) {
-              document.getElementById("result").innerText += data.content;
-            });
-          $.get("https://api.pi.delivery/v1/pi", {
-            start: (1000 * hunks) + 1,
-            numberOfDigits: document.getElementById("digits").value - 1 - (1000 * hunks)
-          }, function(data) {
-            document.getElementById("result").innerText += data.content;
-          });
+            promises.push(fetch("https://api.pi.delivery/v1/pi?start=" + (1000 * a + 1) + "&numberOfDigits=1000"));
+          promises.push(fetch("https://api.pi.delivery/v1/pi?start=" + (1000 * a + 1) + "&numberOfDigits=" + (document.getElementById("digits").value - 1 - (1000 * hunks))));
+          Promise.all(promises)
+            .then(response => response.json().content)
+            .then(data => {document.getElementById("result").innerText += data})
         }
         
         
