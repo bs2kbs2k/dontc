@@ -29,8 +29,10 @@
             promises.push(fetch("https://api.pi.delivery/v1/pi?start=" + (1000 * a + 1) + "&numberOfDigits=1000"));
           promises.push(fetch("https://api.pi.delivery/v1/pi?start=" + (1000 * a + 1) + "&numberOfDigits=" + (document.getElementById("digits").value - 1 - (1000 * hunks))));
           Promise.all(promises)
-            .then(response => response.map(a => a.json().content))
-            .then(data => data.map(data => {document.getElementById("result").innerText += data}))
+            .then(responses => responses.map(response => response.json()))
+            .then(data => Promise.all(data))
+            .then(data => data.map(datum => datum.content))
+            .then(data => data.forEach(datum => document.getElementById("result").innerText += datum))
         }
         
         
