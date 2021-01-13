@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Start Page</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+      <link rel="stylesheet" type="text/css" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+      <script type="text/javascript" src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+  <style id="compiled-css" type="text/css">
+      body {
+  background-color: var(--mdc-theme-background);
+  --mdc-theme-primary: #ff005d;
+  --mdc-theme-secondary: #ff8b26;
+  --mdc-theme-surface: #181b1e;
+  --mdc-theme-background: #181b1e;
+}
+.mdc-text-field{
+  width: 50vw;
+  margin-bottom: 20px;
+}
+.mdc-floating-label--float-above{
+  color: var(--mdc-theme-primary)!important;
+}
+
+    /* EOS */
+  </style>
+
+
+</head>
+<body>
+    <div style="display:flex;justify-content:center;align-items:center;width:100vw;height:100vh;box-sizing:border-box;">
+  <div>
+    <form action="https://duckduckgo.com" method="get">
+      <label class="mdc-text-field mdc-text-field--filled">
+        <span class="mdc-text-field__ripple"></span>
+        <span class="mdc-floating-label" id="search-label">Search DuckDuckGo</span>
+        <input class="mdc-text-field__input" type="text" name="q" aria-labelledby="search-label" autofocus autocomplete="off">
+        <span class="mdc-line-ripple"></span>
+      </label>
+      <br>
+      <input type="submit" style="display: none" />
+    </form>
+    <div style="display:flex;justify-content:center;align-items:center;">
+      <div>
+        <button class="mdc-button reddit-button" onclick="window.location.href='https://reddit.com'">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Reddit</span>
+        </button>
+        <button class="mdc-button youtube-button" onclick="window.location.href='https://youtube.com'">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Youtube</span>
+        </button>
+        <button class="mdc-button github-button" onclick="window.location.href='https://github.com'">
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">Github</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script type="text/javascript">//<![CDATA[
+
+
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.reddit-button'));
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.youtube-button'));
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.github-button'));
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'));
+const textFild = new mdc.textField.MDCTextField(document.querySelector('.mdc-text-field'));
+
+
+  //]]></script>
+
+
+</body>
+</html>
